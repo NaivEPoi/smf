@@ -13,14 +13,29 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/free5gc/openapi"
+	smf_context "github.com/free5gc/smf/internal/context"
 )
 
 // ReleasePduSession - Release
 func ReleasePduSession(c *gin.Context) {
+	scopes := []string{"nsmf-pdusession"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && smf_context.SMF_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // UpdatePduSession - Update (initiated by V-SMF)
 func UpdatePduSession(c *gin.Context) {
+	scopes := []string{"nsmf-pdusession"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && smf_context.SMF_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }

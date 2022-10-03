@@ -61,6 +61,8 @@ type SMFContext struct {
 	UEPreConfigPathPool map[string]*UEPreConfigPaths
 	UEDefaultPathPool   map[string]*UEDefaultPaths
 	LocalSEIDCount      uint64
+
+	OAuth bool `yaml:"OAuth,omitempty"`
 }
 
 // RetrieveDnnInformation gets the corresponding dnn info from S-NSSAI and DNN
@@ -199,6 +201,8 @@ func InitSmfContext(config *factory.Config) {
 	SetupNFProfile(config)
 
 	smfContext.Locality = configuration.Locality
+
+	smfContext.OAuth = configuration.OAuth
 }
 
 func InitSMFUERouting(routingConfig *factory.RoutingConfig) {

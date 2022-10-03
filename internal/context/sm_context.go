@@ -1,7 +1,6 @@
 package context
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"net/http"
@@ -164,7 +163,7 @@ func NewSMContext(id string, pduSessID int32) *SMContext {
 	return smContext
 }
 
-//*** add unit test ***//
+// *** add unit test ***//
 func GetSMContextByRef(ref string) *SMContext {
 	var smCtx *SMContext
 	if value, ok := smContextPool.Load(ref); ok {
@@ -186,7 +185,7 @@ func GetSMContextById(id string, pduSessID int32) *SMContext {
 	return smCtx
 }
 
-//*** add unit test ***//
+// *** add unit test ***//
 func RemoveSMContext(ref string) {
 	var smContext *SMContext
 	if value, ok := smContextPool.Load(ref); ok {
@@ -209,7 +208,7 @@ func RemoveSMContext(ref string) {
 	smContextPool.Delete(ref)
 }
 
-//*** add unit test ***//
+// *** add unit test ***//
 func GetSMContextBySEID(SEID uint64) *SMContext {
 	if value, ok := seidSMContextMap.Load(SEID); ok {
 		smContext := value.(*SMContext)
@@ -218,7 +217,7 @@ func GetSMContextBySEID(SEID uint64) *SMContext {
 	return nil
 }
 
-//*** add unit test ***//
+// *** add unit test ***//
 func (smContext *SMContext) SetCreateData(createData *models.SmContextCreateData) {
 	smContext.Gpsi = createData.Gpsi
 	smContext.Supi = createData.Supi
@@ -268,7 +267,7 @@ func (smContext *SMContext) PCFSelection() error {
 	rep, res, err := SMF_Self().
 		NFDiscoveryClient.
 		NFInstancesStoreApi.
-		SearchNFInstances(context.TODO(), models.NfType_PCF, models.NfType_SMF, &localVarOptionals)
+		SearchNFInstances(openapi.CreateContext(SMF_Self().OAuth, SMF_Self().NfInstanceID, SMF_Self().NrfUri, "SMF"), models.NfType_PCF, models.NfType_SMF, &localVarOptionals)
 	if err != nil {
 		return err
 	}

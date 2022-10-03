@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"context"
 	"fmt"
 
+	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/pfcp"
 	"github.com/free5gc/pfcp/pfcpType"
@@ -136,7 +136,7 @@ func HandlePfcpSessionReportRequest(msg *pfcpUdp.Message) {
 
 			rspData, _, err := smContext.CommunicationClient.
 				N1N2MessageCollectionDocumentApi.
-				N1N2MessageTransfer(context.Background(), smContext.Supi, n1n2Request)
+				N1N2MessageTransfer(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smContext.Supi, n1n2Request)
 			if err != nil {
 				logger.PfcpLog.Warnf("Send N1N2Transfer failed")
 			}

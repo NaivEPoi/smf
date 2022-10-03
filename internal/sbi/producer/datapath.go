@@ -1,10 +1,10 @@
 package producer
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/free5gc/nas/nasMessage"
+	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/pfcp"
 	"github.com/free5gc/pfcp/pfcpType"
@@ -177,7 +177,7 @@ func establishPfcpSession(smContext *smf_context.SMContext, state *PFCPState, re
 		rspData, _, err := smContext.
 			CommunicationClient.
 			N1N2MessageCollectionDocumentApi.
-			N1N2MessageTransfer(context.Background(), smContext.Supi, n1n2Request)
+			N1N2MessageTransfer(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smContext.Supi, n1n2Request)
 		smContext.SMContextState = smf_context.Active
 		if err != nil {
 			logger.PfcpLog.Warnf("Send N1N2Transfer failed")
@@ -206,7 +206,7 @@ func sendPDUSessionEstablishmentReject(smContext *smf_context.SMContext, nasErro
 	rspData, _, err := smContext.
 		CommunicationClient.
 		N1N2MessageCollectionDocumentApi.
-		N1N2MessageTransfer(context.Background(), smContext.Supi, n1n2Request)
+		N1N2MessageTransfer(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smContext.Supi, n1n2Request)
 	smContext.SMContextState = smf_context.InActive
 	if err != nil {
 		logger.PfcpLog.Warnf("Send N1N2Transfer failed")

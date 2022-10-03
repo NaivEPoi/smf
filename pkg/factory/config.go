@@ -73,6 +73,7 @@ type Configuration struct {
 	ULCL                 bool                 `yaml:"ulcl,omitempty" valid:"type(bool),optional"`
 	PLMNList             []PlmnID             `yaml:"plmnList,omitempty"  valid:"optional"`
 	Locality             string               `yaml:"locality,omitempty" valid:"type(string),optional"`
+	OAuth                bool                 `yaml:"OAuth,omitempty"`
 }
 
 func (c *Configuration) validate() (bool, error) {

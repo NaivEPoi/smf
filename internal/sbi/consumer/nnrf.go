@@ -1,7 +1,6 @@
 package consumer
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -49,7 +48,7 @@ func SendNFRegistration() error {
 		rep, res, err = smf_context.SMF_Self().
 			NFManagementClient.
 			NFInstanceIDDocumentApi.
-			RegisterNFInstance(context.TODO(), smf_context.SMF_Self().NfInstanceID, profile)
+			RegisterNFInstance(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smf_context.SMF_Self().NfInstanceID, profile)
 		if err != nil || res == nil {
 			logger.ConsumerLog.Infof("SMF register to NRF Error[%s]", err.Error())
 			time.Sleep(2 * time.Second)
@@ -100,7 +99,7 @@ func SendNFDeregistration() error {
 	res, localErr := smf_context.SMF_Self().
 		NFManagementClient.
 		NFInstanceIDDocumentApi.
-		DeregisterNFInstance(context.TODO(), smf_context.SMF_Self().NfInstanceID)
+		DeregisterNFInstance(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smf_context.SMF_Self().NfInstanceID)
 	if localErr != nil {
 		logger.ConsumerLog.Warnln(localErr)
 		return localErr
@@ -126,7 +125,7 @@ func SendNFDiscoveryUDM() (*models.ProblemDetails, error) {
 	result, httpResp, localErr := smf_context.SMF_Self().
 		NFDiscoveryClient.
 		NFInstancesStoreApi.
-		SearchNFInstances(context.TODO(), models.NfType_UDM, models.NfType_SMF, &localVarOptionals)
+		SearchNFInstances(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), models.NfType_UDM, models.NfType_SMF, &localVarOptionals)
 
 	if localErr == nil {
 		smf_context.SMF_Self().UDMProfile = result.NfInstances[0]
@@ -171,7 +170,7 @@ func SendNFDiscoveryPCF() (problemDetails *models.ProblemDetails, err error) {
 	result, httpResp, localErr := smf_context.SMF_Self().
 		NFDiscoveryClient.
 		NFInstancesStoreApi.
-		SearchNFInstances(context.TODO(), targetNfType, requesterNfType, &localVarOptionals)
+		SearchNFInstances(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), targetNfType, requesterNfType, &localVarOptionals)
 
 	if localErr == nil {
 		logger.ConsumerLog.Traceln(result.NfInstances)
@@ -207,7 +206,7 @@ func SendNFDiscoveryServingAMF(smContext *smf_context.SMContext) (*models.Proble
 	result, httpResp, localErr := smf_context.SMF_Self().
 		NFDiscoveryClient.
 		NFInstancesStoreApi.
-		SearchNFInstances(context.TODO(), targetNfType, requesterNfType, &localVarOptionals)
+		SearchNFInstances(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), targetNfType, requesterNfType, &localVarOptionals)
 
 	if localErr == nil {
 		if result.NfInstances == nil {
@@ -246,7 +245,7 @@ func SendDeregisterNFInstance() (*models.ProblemDetails, error) {
 	res, err := smfSelf.
 		NFManagementClient.
 		NFInstanceIDDocumentApi.
-		DeregisterNFInstance(context.Background(), smfSelf.NfInstanceID)
+		DeregisterNFInstance(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smfSelf.NfInstanceID)
 	if err == nil {
 		return nil, err
 	} else if res != nil {

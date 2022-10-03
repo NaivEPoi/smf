@@ -2,7 +2,6 @@ package context
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/free5gc/openapi/models"
 	"github.com/free5gc/smf/pkg/factory"
@@ -17,14 +16,15 @@ var NFProfile struct {
 
 func SetupNFProfile(config *factory.Config) {
 	// Set time
-	nfSetupTime := time.Now()
+	// nfSetupTime := time.Now()
 
 	// set NfServiceVersion
 	NFProfile.NFServiceVersion = &[]models.NfServiceVersion{
 		{
 			ApiVersionInUri: "v1",
 			ApiFullVersion:  fmt.Sprintf("https://%s:%d/nsmf-pdusession/v1", SMF_Self().RegisterIPv4, SMF_Self().SBIPort),
-			Expiry:          &nfSetupTime,
+			// commented to avoid error
+			// Expiry:          &nfSetupTime,
 		},
 	}
 

@@ -1,7 +1,6 @@
 package producer
 
 import (
-	"context"
 	"net"
 	"net/http"
 
@@ -127,7 +126,7 @@ func HandlePDUSessionSMContextCreate(request models.PostSmContextsRequest) *http
 
 	if sessSubData, rsp, err := SubscriberDataManagementClient.
 		SessionManagementSubscriptionDataRetrievalApi.
-		GetSmData(context.Background(), smContext.Supi, smDataParams); err != nil {
+		GetSmData(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smContext.Supi, smDataParams); err != nil {
 		logger.PduSessLog.Errorln("Get SessionManagementSubscriptionData error:", err)
 	} else {
 		defer func() {

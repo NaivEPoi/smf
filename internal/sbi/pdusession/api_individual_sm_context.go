@@ -18,6 +18,7 @@ import (
 
 	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
+	smf_context "github.com/free5gc/smf/internal/context"
 	"github.com/free5gc/smf/internal/logger"
 	"github.com/free5gc/smf/internal/sbi/producer"
 	"github.com/free5gc/util/httpwrapper"
@@ -25,6 +26,12 @@ import (
 
 // HTTPReleaseSmContext - Release SM Context
 func HTTPReleaseSmContext(c *gin.Context) {
+	scopes := []string{"nsmf-pdusession"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && smf_context.SMF_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	logger.PduSessLog.Info("Receive Release SM Context Request")
 	var request models.ReleaseSmContextRequest
 	request.JsonData = new(models.SmContextReleaseData)
@@ -58,11 +65,23 @@ func HTTPReleaseSmContext(c *gin.Context) {
 
 // RetrieveSmContext - Retrieve SM Context
 func RetrieveSmContext(c *gin.Context) {
+	scopes := []string{"nsmf-pdusession"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && smf_context.SMF_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
 // HTTPUpdateSmContext - Update SM Context
 func HTTPUpdateSmContext(c *gin.Context) {
+	scopes := []string{"nsmf-pdusession"}
+	_, oauth_err := openapi.CheckOAuth(c.Request.Header.Get("Authorization"), scopes)
+	if oauth_err != nil && smf_context.SMF_Self().OAuth {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": oauth_err.Error()})
+		return
+	}
 	logger.PduSessLog.Info("Receive Update SM Context Request")
 	var request models.UpdateSmContextRequest
 	request.JsonData = new(models.SmContextUpdateData)

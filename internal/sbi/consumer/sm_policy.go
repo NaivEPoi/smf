@@ -1,13 +1,13 @@
 package consumer
 
 import (
-	"context"
 	"fmt"
 	"regexp"
 
 	"github.com/pkg/errors"
 
 	"github.com/free5gc/nas/nasConvert"
+	"github.com/free5gc/openapi"
 	"github.com/free5gc/openapi/models"
 	smf_context "github.com/free5gc/smf/internal/context"
 )
@@ -45,7 +45,7 @@ func SendSMPolicyAssociationCreate(smContext *smf_context.SMContext) (string, *m
 	var smPolicyID string
 	var smPolicyDecision *models.SmPolicyDecision
 	if smPolicyDecisionFromPCF, httpRsp, err := smContext.SMPolicyClient.
-		DefaultApi.SmPoliciesPost(context.Background(), smPolicyData); err != nil {
+		DefaultApi.SmPoliciesPost(openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smPolicyData); err != nil {
 		return "", nil, err
 	} else {
 		smPolicyDecision = &smPolicyDecisionFromPCF
@@ -76,7 +76,7 @@ func SendSMPolicyAssociationTermination(smContext *smf_context.SMContext) error 
 	}
 
 	if _, err := smContext.SMPolicyClient.DefaultApi.SmPoliciesSmPolicyIdDeletePost(
-		context.Background(), smContext.SMPolicyID, models.SmPolicyDeleteData{}); err != nil {
+		openapi.CreateContext(smf_context.SMF_Self().OAuth, smf_context.SMF_Self().NfInstanceID, smf_context.SMF_Self().NrfUri, "SMF"), smContext.SMPolicyID, models.SmPolicyDeleteData{}); err != nil {
 		return fmt.Errorf("SM Policy termination failed: %v", err)
 	}
 
